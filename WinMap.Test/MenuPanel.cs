@@ -4,7 +4,7 @@ namespace WinMan.Test
 {
     internal class MenuPanel : Panel
     {
-        public MenuPanel(ResizeCalc rootX, ResizeCalc rootY, ResizeCalc width, ResizeCalc height) : base(rootX, rootY, width, height)
+        public MenuPanel(ResizeCalc rootX, ResizeCalc rootY, ResizeCalc width, ResizeCalc height) : base(rootX, rootY, width, height, true, false)
         {
         }
 

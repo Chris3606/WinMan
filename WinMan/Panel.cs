@@ -61,6 +61,29 @@ namespace WinMan
         /// </summary>
         public bool RealTimeUpdate { get; protected set; }
 
+        private bool _acceptsKeyboardInput;
+        /// <summary>
+        /// Whether or not the panel needs to accept keyboard input.  If not, the OnKeyPress function will never be called.
+        /// </summary>
+        public bool AcceptsKeyboardInput
+        {
+            get => _acceptsKeyboardInput;
+            set
+            {
+                if (_acceptsKeyboardInput != value)
+                {
+                    _acceptsKeyboardInput = value;
+                    if (Shown)
+                    {
+                        if (_acceptsKeyboardInput)
+                            Engine.AddToKeyPressFront(OnKeyPress);
+                        else
+                            Engine.KeyPress -= OnKeyPress;
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// The width of the section of the root console that this panel is rendering to.
         /// </summary>
@@ -98,8 +121,10 @@ namespace WinMan
         /// root console that the panel will render to should be.</param>
         /// <param name="height">A function that takes no parameters and returns an int, saying what the height of the section of the
         /// root console that the panel will render to should be.</param>
+        /// <param name="acceptsKeyboardInput">Whether or not the panel will accept keyboard input (have its OnKeyPress function called) when it is
+        /// being shown.</param>
         /// <param name="realTimeUpdate">Whether or not the panel should run the code to update its offscreen console every frame.</param>
-        public Panel(ResizeCalc rootX, ResizeCalc rootY, ResizeCalc width, ResizeCalc height, bool realTimeUpdate = false)
+        protected Panel(ResizeCalc rootX, ResizeCalc rootY, ResizeCalc width, ResizeCalc height, bool acceptsKeyboardInput = false, bool realTimeUpdate = false)
         {
             rootXCalc = rootX;
             rootYCalc = rootY;
@@ -112,6 +137,7 @@ namespace WinMan
             console = new RLConsole(widthCalc(), heightCalc());
             Shown = false;
             RealTimeUpdate = realTimeUpdate;
+            _acceptsKeyboardInput = acceptsKeyboardInput;
             OnResize = null;
         }
 
@@ -147,8 +173,9 @@ namespace WinMan
         protected virtual void OnKeyPress(object sender, KeyPressEventArgs e) { }
 
         /// <summary>
-        /// Causes the panel to be rendered (shown to the program user) each render frame, if it is not already shown.  If RealTimeUpdate is true, the panel's UpdateLayout
-        /// handler is added to the Program.UpdateRealTimeLayout event handler list.  If RealTimeUpdate is false, it simply calls UpdateLayout once.
+        /// Causes the panel to be rendered (shown to the program user) each render frame, and to accept keyboard input if AcceptsKeyboardInput is true,
+        /// if it is not already shown.  If RealTimeUpdate is true, the panel's UpdateLayout handler is added to the Program.UpdateRealTimeLayout event
+        /// handler list.  If RealTimeUpdate is false, it simply calls UpdateLayout once.
         /// </summary>
         public void Show()
         {
@@ -160,7 +187,10 @@ namespace WinMan
                     UpdateLayout(this, new UpdateEventArgs(0f));
 
                 Engine.Render += Render;
-                Engine.AddToKeyPressFront(OnKeyPress);
+
+                if (_acceptsKeyboardInput)
+                    Engine.AddToKeyPressFront(OnKeyPress);
+
                 Shown = true;
             }
             else
@@ -168,15 +198,18 @@ namespace WinMan
         }
 
         /// <summary>
-        /// Causes the panel to stop being rendered (shown to the user), if it is currently shown.  If RealTimeUpdate is true, the panel's UpdateLayout handler is
-        /// removed from the Program.UpdateRealTimeLayout event handler list.
+        /// Causes the panel to stop being rendered (shown to the user) and to stop receiving keyboard input, if it is currently shown.
+        /// If RealTimeUpdate is true, the panel's UpdateLayout handler is removed from the Program.UpdateRealTimeLayout event handler list.
         /// </summary>
         public void Hide()
         {
             if (Shown)
             {
                 Engine.Render -= Render;
-                Engine.KeyPress -= OnKeyPress;
+
+                if (_acceptsKeyboardInput)
+                    Engine.KeyPress -= OnKeyPress;
+
                 if (RealTimeUpdate)
                     Engine.UpdateRealTimeLayouts -= UpdateLayout;
 
@@ -198,8 +231,7 @@ namespace WinMan
             RootY = rootYCalc();
             console.Resize(widthCalc(), heightCalc());
 
-            if (OnResize != null)
-                OnResize(this, EventArgs.Empty);
+            OnResize?.Invoke(this, EventArgs.Empty);
 
             if (!RealTimeUpdate)
                 UpdateLayout(this, null);

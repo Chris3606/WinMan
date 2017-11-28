@@ -8,7 +8,7 @@ namespace WinMan.Test
         private int[,] map;
 
         public MapPanel(ResizeCalc rootX, ResizeCalc rootY, ResizeCalc width, ResizeCalc height)
-            : base(rootX, rootY, width, height, true)
+            : base(rootX, rootY, width, height, false, true)
         {
             Random rng = new Random();
             map = new int[Width, Height];

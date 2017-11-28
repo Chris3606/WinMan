@@ -7,7 +7,7 @@ namespace WinMan.Test
         private string message;
 
         public AlertPanel(ResizeCalc centerX, ResizeCalc centerY, string message)
-            : base(() => centerX() - (message.Length / 2), () => centerY() - 2, () => message.Length, Screen.SizeC(5))
+            : base(() => centerX() - (message.Length / 2), () => centerY() - 2, () => message.Length, Screen.SizeC(5), true, false)
         {
             this.message = message;
         }
