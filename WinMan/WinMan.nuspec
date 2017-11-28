@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/Chris3606/WinMan</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>First release.  Includes basic keyboard handling, panel, and screen systems.</releaseNotes>
+    <releaseNotes>Added flag that allows one to prevent a panel from reveiving keyboard input, for cases when it has nothing it needs to do with keyboard input.</releaseNotes>
     <copyright>$copyright$</copyright>
     <tags>roguelike roguelikes rogue library 2d game games console ui</tags>
   </metadata>
