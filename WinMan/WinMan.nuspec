@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$authors$</authors>
+    <owners>$authors$</owners>
+    <licenseUrl>https://github.com/Chris3606/WinMan/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/Chris3606/WinMan</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>First release.  Includes basic keyboard handling, panel, and screen systems.</releaseNotes>
+    <copyright>$copyright$</copyright>
+    <tags>roguelike roguelikes rogue library 2d game games console ui</tags>
+  </metadata>
+  
+  <files>
+	<file src="..\WinMan\bin\Release\WinMan.dll" target="lib\net" />
+    <file src="..\WinMan\bin\Release\WinMan.pdb" target="lib\net" />
+	<file src="..\WinMan\bin\Release\WinMan.xml" target="lib\net" />
+  </files>
+</package>

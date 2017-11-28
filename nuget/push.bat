@@ -1,0 +1,1 @@
+nuget push WinMan.%1.nupkg -Source https://www.nuget.org/api/v2/package
